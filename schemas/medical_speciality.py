@@ -1,0 +1,26 @@
+from enum import Enum
+
+
+class MedicalSpeciality(Enum):
+    ALLERGY_IMMUNOLOGY = "Allergy and Immunology"
+    ANESTHESIOLOGY = "Anesthesiology"
+    CARDIOLOGY = "Cardiology"
+    DERMATOLOGY = "Dermatology"
+    ENDOCRINOLOGY = "Endocrinology"
+    GASTROENTEROLOGY = "Gastroenterology"
+    GERIATRICS = "Geriatrics"
+    GYNECOLOGY_OBSTETRICS = "Gynecology and Obstetrics"
+    HEMATOLOGY = "Hematology"
+    INFECTIOUS_DISEASES = "Infectious Diseases"
+    INTERNAL_MEDICINE = "Internal Medicine"
+    NEPHROLOGY = "Nephrology"
+    PULMONOLOGY = "Pulmonology"
+    NEUROLOGY = "Neurology"
+    OPHTHALMOLOGY = "Ophthalmology"
+    ONCOLOGY = "Oncology"
+    ORTHOPEDICS = "Orthopedics"
+    OTORHINOLARYNGOLOGY = "Otorhinolaryngology"
+    PEDIATRICS = "Pediatrics"
+    PSYCHIATRY = "Psychiatry"
+    RHEUMATOLOGY = "Rheumatology"
+    UROLOGY = "Urology"
