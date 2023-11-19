@@ -1,18 +1,15 @@
 import jwt
-from jose import JWTError, jwt
+from jose import ExpiredSignatureError, JWTError, jwt
 from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status, Depends
-from fastapi.responses import JSONResponse
 from passlib.context import CryptContext
 from dotenv import load_dotenv
-import os
 from database.database import Session
 from models.users_doctor import UserDoctor
 from models.user_patient import UserPatient
-from schemas.user import User
-from schemas.doctor import Doctor
 from schemas.pacient import Pacient
+from schemas.doctor import Doctor
 import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -108,7 +105,7 @@ class AuthService:
         try:
             with Session() as db:
                 hashed_password = pwd_context.hash(password)
-                user_patient = UserPatient(username=username, hashed_password=hashed_password, id_doctor=id_date_doctor)
+                user_patient = UserPatient(username=username, hashed_password=hashed_password, pacient_id=id_date_patient)
                 db.add(user_patient)
                 db.commit()
             return True
@@ -144,8 +141,8 @@ class AuthService:
         server.quit()
 
     @staticmethod 
-    async def validate_user_type(user):
-        if isinstance(user, Doctor) or isinstance(user, Patient):
+    def validate_user_type(user):
+        if isinstance(user, Doctor) or isinstance(user, Pacient):
             return user
         else:
             raise HTTPException(

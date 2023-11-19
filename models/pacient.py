@@ -1,5 +1,5 @@
 from database.database import Base
-from sqlalchemy import Column, String, Integer, CHAR, CheckConstraint, DateTime
+from sqlalchemy import Column, String, Integer, CHAR, CheckConstraint, DateTime, Enum
 from sqlalchemy.orm import relationship
 from schemas.pacient import Pacient
 
@@ -16,6 +16,7 @@ class Pacient_Model(Base):
     address = Column(String(255), nullable=False)
     birthdate = Column(DateTime, nullable=False)
     gender = Column(CHAR(1), CheckConstraint("gender IN('M','F','X','O')"), nullable= False)
+    role = Column(Enum("patient", name="patient_role"), nullable=False, default="patient")
     appointments = relationship("Appointment_Model", back_populates="patient")
 
     user_patient = relationship("UserPatient", back_populates="pacient")

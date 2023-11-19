@@ -14,14 +14,14 @@ class Patient_Services:
     def add_patient(self, patient: dict):
         with self.db as db:
             try:
-                new_patient = Pacient_Model(patient)
+                new_patient = Pacient_Model(**patient)
                 self.db.add(new_patient)
                 self.db.commit()
                 id_patient = new_patient.id
                 return id_patient
             except Exception as e:
                 self.db.rollback()
-                print(e)
+                self.db.flush()
                 raise Exception(e)
             finally:
                 self.db.close()

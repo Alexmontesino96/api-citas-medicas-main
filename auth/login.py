@@ -100,11 +100,15 @@ async def register(user_patient: Pacient):
     """
     user_data = user_patient.get_user_data()
     patient_data = user_patient.get_patient_data()
-    if auth_handler.validate_user_type(user_data):
+    if auth_handler.validate_user_type(user_patient):
         if await auth_handler.validate_existing_user(user_patient.username):
+            print("Entry 1")
             with Session() as db:
-                patient_services = Patient_Services(db)
-                id_patient = patient_services.add_patient(patient_data)
+                print("Entry 2")
+                print(patient_data)
+                id_patient = Patient_Services(db).add_patient(patient_data)
+                print("Entry 3")
+                print(id_patient)
                 if await auth_handler.register_user_patient(user_data["username"], user_data["hashed_password"], id_patient):
                     return {"message": "Patient created successfully"}                
     return {"message": "Patient created successfully"}
