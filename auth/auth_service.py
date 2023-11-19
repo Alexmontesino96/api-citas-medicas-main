@@ -1,6 +1,5 @@
 import jwt
 from jose import JWTError, jwt
-from jwt.exceptions import PyJWTError
 from fastapi.security import OAuth2PasswordBearer
 from datetime import datetime, timedelta
 from fastapi import HTTPException, status, Depends
