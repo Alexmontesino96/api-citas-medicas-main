@@ -28,9 +28,17 @@ class AuthService:
     """
 
     @staticmethod
-    async def search_username(username: str):
+    async def search_username_doctor(username: str):
         with Session() as db:
             result = db.query(UserDoctor).filter(UserDoctor.username == username).first()
+            if not result:
+                return False
+            return result
+        
+    @staticmethod
+    async def search_username_patient(username: str):
+        with Session() as db:
+            result = db.query(UserPatient).filter(UserPatient.username == username).first()
             if not result:
                 return False
             return result
@@ -64,8 +72,16 @@ class AuthService:
             )
 
     @staticmethod
-    async def authenticate_user(username: str, password: str):
-        user = await AuthService.search_username(username)
+    async def authenticate_user(username: str, password: str, role: str):
+        if role == "doctor":
+            user = await AuthService.search_username_doctor(username)
+        elif role == "patient":
+            user = await AuthService.search_username_patient(username)
+        else:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Invalid user type: User must be either a 'Doctor' or a 'Patient'."
+            )
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -150,8 +166,11 @@ class AuthService:
                 detail="Invalid user type: User must be either a 'Doctor' or a 'Patient'."
             )
     @staticmethod
-    async def validate_existing_user(username: str):
-        user_exists = await AuthService.search_username(username)
+    async def validate_existing_user(username: str, user_type: str):
+        if user_type == "doctor":
+            user_exists = await AuthService.search_username_doctor(username)
+        else:
+            user_exists = await AuthService.search_username_patient(username)
         if user_exists:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,

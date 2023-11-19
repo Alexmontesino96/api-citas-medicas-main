@@ -17,7 +17,7 @@ auth_handler = AuthService()
 
 
 @login_router.post("/login", tags=["login"])
-async def login(form_data: OAuth2PasswordRequestForm = Depends(), auth_service: AuthService = Depends()):
+async def login(role: str, form_data: OAuth2PasswordRequestForm = Depends(), auth_service: AuthService = Depends()):
     """
     Authenticates a user with the provided credentials and returns an access token if successful.
 
@@ -28,7 +28,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), auth_service: 
     Returns:
         dict: A dictionary containing the access token and token type.
     """
-    token = await auth_service.authenticate_user(form_data.username, form_data.password)
+    token = await auth_service.authenticate_user(form_data.username, form_data.password, role)
     if not token:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -77,8 +77,8 @@ async def register(users_doctor: Doctor):
     """
     user_data = users_doctor.get_user_data()
     doctor_data = users_doctor.get_doctor_data()
-    if await auth_handler.validate_user_type(users_doctor):
-        if await auth_handler.validate_existing_user(users_doctor.username):
+    if auth_handler.validate_user_type(users_doctor):
+        if await auth_handler.validate_existing_user(users_doctor.username, "doctor"):
             with Session() as db:
                 doctor_services = Doctor_Services(db)
                 id_doctor = doctor_services.add_doctor(doctor_data)
@@ -101,7 +101,7 @@ async def register(user_patient: Pacient):
     user_data = user_patient.get_user_data()
     patient_data = user_patient.get_patient_data()
     if auth_handler.validate_user_type(user_patient):
-        if await auth_handler.validate_existing_user(user_patient.username):
+        if await auth_handler.validate_existing_user(user_patient.username, "patient"):
             print("Entry 1")
             with Session() as db:
                 print("Entry 2")
