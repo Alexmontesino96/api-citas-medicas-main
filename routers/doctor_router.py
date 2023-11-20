@@ -9,14 +9,14 @@ from fastapi.encoders import jsonable_encoder
 from auth.auth_service import AuthService
 from schemas.user import User
 from pydantic import EmailStr
+from auth.auth_service import get_current_user_role
 
 
 doctor_router = APIRouter()
 auth_handler = AuthService()
 
 @doctor_router.get("/doctor/get", tags=["doctor"])
-def search_id_doctor(id: int, current_user: User = Depends(auth_handler.verify_token)):
-    
+async def search_id_doctor(id: int, current_user: User = Depends(get_current_user_role("doctor"))):
     if not current_user:
         raise HTTPException(status_code=401, detail="Access denied. Authentication credentials provided are invalid or missing.")
     with Session() as db:
@@ -26,7 +26,7 @@ def search_id_doctor(id: int, current_user: User = Depends(auth_handler.verify_t
     return JSONResponse(content=jsonable_encoder(result), status_code=200)
 
 @doctor_router.get("/doctor/search/phone_number", tags=["doctor"])
-def search_phone_number_doctor(phone_number: str, current_user: User = Depends(auth_handler.verify_token)):
+def search_phone_number_doctor(phone_number: str, current_user: User = Depends(get_current_user_role("doctor"))):
     
     if not current_user:
         raise HTTPException(status_code=401, detail="Access denied. Authentication credentials provided are invalid or missing.")
