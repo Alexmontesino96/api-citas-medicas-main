@@ -1,11 +1,6 @@
-from pydantic import BaseModel, Field, EmailStr, field_validator
+from pydantic import BaseModel, Field, EmailStr, validator
 from validation import validation
-from typing import Optional, List
-
-
-from typing import List, Optional
-from pydantic import BaseModel, EmailStr, Field, validator
-
+from typing import Optional
 
 class Person(BaseModel):
     """Model representing a person in the medical appointment system.
@@ -31,7 +26,7 @@ class Person(BaseModel):
         Person: An instance of the Person class.
     """
     first_name: str = Field(min_length=1, max_length=50)
-    middle_name: str = Field(default=None, max_length=50, min_length=1)
+    middle_name: Optional[str] = Field(default=None, max_length=50, min_length=1)
     last_name: str = Field(min_length=1, max_length=50)
     email: EmailStr = Field(examples= ["user@gmail.com"])
     phone_number: str = Field(default="7860000000",max_length=10, min_length=10)
@@ -55,7 +50,7 @@ class Person(BaseModel):
 
     @validator("birthdate")
     def validate_birthdate(cls, value):
-        valid_date = validation.validation_date(value)
+        valid_date = validation.validation_date(value,"%m/%d/%Y")
         return valid_date
 
     @validator("gender")
@@ -68,7 +63,7 @@ class Person(BaseModel):
     @validator("phone_number")
     def validate_phone_number(cls, value):
         if not value.isdigit():
-            raise HTTPException("phone_number must only contain digits")
+            raise ValueError("phone_number must only contain digits")
         if len(value) != 10:
             raise ValueError("phone_number must be 10 digits long")
         return value

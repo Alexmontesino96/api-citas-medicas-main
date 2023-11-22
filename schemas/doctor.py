@@ -1,14 +1,22 @@
 from schemas.person import Person
 from schemas.user import User
 from schemas.medical_speciality import MedicalSpeciality
-from pydantic import Field, field_validator
+from pydantic import Field, validator
 from enum import Enum
+from pydantic import BaseModel, validator
+from schemas.medical_speciality import MedicalSpeciality
+
 
 
 class Doctor(Person, User):
     speciality: MedicalSpeciality
-    npi: str = Field(default="3289643276486",min_length=8, max_length=18)
+    npi: str = Field(default="3289643276486", min_length=8, max_length=18)
 
+    @validator('npi')
+    def validate_npi(cls, value):
+        if not value.isdigit():
+            raise ValueError("NPI inválido")
+        return value
 
     def get_doctor_data(self):
         return {
@@ -23,12 +31,5 @@ class Doctor(Person, User):
             "npi": self.npi,
             "role": "doctor"
         }
-
-    def __init__(self, **data):
-        super().__init__(**data)
-        if not self.is_doctor():
-            raise ValueError("Role must be 'doctor' for this class")
-        self.speciality = MedicalSpeciality(data['speciality'])
-        self.npi = data['npi']
     
 

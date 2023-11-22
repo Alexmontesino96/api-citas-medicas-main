@@ -3,18 +3,36 @@ from fastapi.responses import JSONResponse
 from pydantic import ValidationError
 
 
-def validation_date(date: str):
-    valid_date = datetime
-    if date:
-        try:
-            # Trata de convertir la cadena en un objeto datetime
-            if date != "string":
-                valid_date = datetime.strptime(date, "%m/%d/%Y")
-            # Si tiene éxito, retorna el objeto datetime
-            return valid_date
-        except ValueError:
-            # Si falla, lanza un error con un mensaje personalizado
-            raise ValueError("Date must be in MM/DD/YYYY format")
+from datetime import datetime
+
+def validation_date(date: str, date_format: str = "%m/%d/%Y"):
+    """
+    Validates a date string based on a given date format.
+
+    Args:
+        date (str): The date string to be validated.
+        date_format (str, optional): The format of the date string. Defaults to "%m/%d/%Y".
+
+    Returns:
+        datetime.datetime: The validated date as a datetime object.
+
+    Raises:
+        ValueError: If the date string is empty.
+        ValueError: If the date is in the future.
+        ValueError: If the date string is not in the specified format.
+    """
+    if not date:
+        raise ValueError("Date must not be empty")
+
+    try:
+        valid_date = datetime.strptime(date, date_format)
+        # Additional check: ensure the date is not in the future
+        if valid_date > datetime.now():
+            raise ValueError("Date must not be in the future")
+        return valid_date
+    except ValueError:
+        raise ValueError(f"Date must be in {date_format} format")
+
 
 
 def validar_next_day(date_appointment: datetime) -> bool:

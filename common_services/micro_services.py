@@ -1,17 +1,17 @@
+from enum import Enum
 from fastapi import HTTPException
 from models.user_patient import UserPatient
 from models.users_doctor import UserDoctor
 from database.database import Session
 
-def search_user_with_role(rol, username):
+class UserRole(Enum):
+    PACIENTE = 'paciente'
+    DOCTOR = 'doctor'
+
+async def search_user_with_role(role: UserRole, username: str):
     with Session() as db:
-        if rol == 'paciente':
-            tabla = UserPatient
-        elif rol == 'doctor':
-            tabla = UserDoctor
-        else:
-            raise ValueError({'error':'Rol inválido'})
-        resultado = db.query(tabla).filter(tabla.username == username).first()
-        if not resultado:
-            return HTTPException(status_code=404, detail="No user found with the provided username.", headers={"WWW-Authenticate": "Bearer"})
-        return resultado
+        model = UserPatient if role == UserRole.PACIENTE else UserDoctor
+        user = db.query(model).filter(model.username == username).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="No user found with the provided username.")
+        return user
