@@ -9,7 +9,7 @@ from auth.login import login_router
 
 app = FastAPI()
 app.title = "Medical Center"
-app.version = "1.1.0"
+app.version = "2.0"
 app.add_middleware(ErrorHandler)
 app.include_router(login_router)
 app.include_router(doctor_router)

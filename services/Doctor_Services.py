@@ -3,38 +3,42 @@ from models.doctor_model import Doctor_Model
 from fastapi.responses import JSONResponse
 from fastapi import HTTPException
 from validation import micro_servicios, validation
+from auth.user_services import UserServices
+from sqlalchemy.exc import SQLAlchemyError
+from common_services.micro_services import validate_existence_user_with_role
 
 
 class Doctor_Services():
-    """
-    Clase que maneja los servicios relacionados con los doctores.
-    """
+    
     def __init__(self, db) -> None:
         self.db = db
 
-    def add_doctor(self, doctor: dict):
-        """
-        Agrega un nuevo doctor a la base de datos.
+    async def add_doctor_db(self, doctor_data: dict, username: str):
+            """
+            Adds a new doctor to the database.
 
-        Args:
-            doctor (Doctor): Objeto Doctor que se desea agregar.
+            Args:
+                doctor_data (dict): A dictionary containing the doctor's data.
+                username (str): The username of the user adding the doctor.
 
-        Returns:
-            None
-        """
-        with self.db as db:
+            Returns:
+                int: The ID of the newly added doctor.
+
+            Raises:
+                HTTPException: If there is an error adding the doctor to the database.
+            """
             try:
-                new_doctor = Doctor_Model(**doctor)
+                validate_existence_user_with_role("doctor", username, self.db)
+
+                new_doctor = Doctor_Model(**doctor_data)
                 self.db.add(new_doctor)
-                self.db.commit()
-                print(new_doctor.id)
+                self.db.flush()
                 return new_doctor.id
-            except Exception as e:
+
+            except SQLAlchemyError as e:
                 self.db.rollback()
-                print(e)
-                raise HTTPException(status_code=400, detail=str(e))
-            finally:
-                self.db.close()
+                raise HTTPException(status_code=500, detail=str(e))
+
 
     def edit_doctor(self, id_doctor: int, doctor: Doctor):
         """
@@ -97,7 +101,7 @@ class Doctor_Services():
         Returns:
             Doctor: Objeto Doctor con los datos del doctor encontrado.
         """
-        with self.db as db:
+        with self.db:
             try:
                 result = self.db.query(Doctor_Model).filter(Doctor_Model.phone_number == phone_number).first()
                 if not result:

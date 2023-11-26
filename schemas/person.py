@@ -25,15 +25,15 @@ class Person(BaseModel):
     Returns:
         Person: An instance of the Person class.
     """
-    first_name: str = Field(min_length=1, max_length=50)
-    middle_name: Optional[str] = Field(default=None, max_length=50, min_length=1)
-    last_name: str = Field(min_length=1, max_length=50)
+    first_name: str = Field(min_length=1, max_length=50, repr=True)
+    middle_name: str = Field(default="middle_name", max_length=50, min_length=1, validate_default=True)
+    last_name: str = Field(min_length=1, max_length=50, repr=True)
     email: EmailStr = Field(examples= ["user@gmail.com"])
     phone_number: str = Field(default="7860000000",max_length=10, min_length=10)
     address: str = Field(examples=["123 Main St, Miami, FL 33131"])
     birthdate: Optional[str] = Field(examples=["DD/MM/YYYY"])
-    gender: Optional[str] = Field(examples=["M,F,X,O"])
-    role: str = Field(examples=["patient"], enum=["patient", "doctor"])
+    gender: Optional[str] = Field(examples=["M,F,X,O"], repr=False)
+    role: str = Field(examples=["patient"], enum=["patient", "doctor"], repr=False)
 
     def is_doctor(self):
         return "doctor" in self.role
