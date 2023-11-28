@@ -17,7 +17,7 @@ class Doctor_Model(Base):
     address = Column(String(255), nullable=False)
     birthdate = Column(DateTime, nullable=False)
     speciality = Column(String(50), nullable=False)
-    npi = Column(Integer, unique=True, nullable=False)
+    npi = Column(String(255), unique=True, nullable=False)
     role = Column(Enum("doctor", name="doctor_role"), nullable=False, default="doctor")
     appointments = relationship("Appointment_Model", back_populates="doctor")
     users_doctor = relationship("UserDoctor", back_populates="doctor")
