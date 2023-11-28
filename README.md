@@ -80,7 +80,7 @@ Distributed under the XYZ License. See `LICENSE` for more information.
 
 ## Contact
 
-Your Name - Alex Montesino ->  alexmontesinocastro9@gmail.com
+Alex Montesino ->  alexmontesinocastro9@gmail.com
 
 Project Link: https://github.com/Alexmontesino96/api-citas-medicas-main.git
 
