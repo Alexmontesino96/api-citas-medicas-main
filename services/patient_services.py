@@ -1,31 +1,45 @@
-from validation import micro_servicios, validation
 from schemas.pacient import Pacient
 from models.pacient import Pacient_Model
+from common_services.micro_services import validate_existence_user_with_role
+from fastapi.exceptions import HTTPException
+from auth.user_services import UserServices
+from sqlalchemy.exc import SQLAlchemyError
+
 
 
 class Patient_Services:
     def __init__(self, db) -> None:
         self.db = db
 
-    def search_patient_id(self, id: int):
-        with self.db as db:
-            return micro_servicios.search_id(Pacient_Model, self.db, id)
 
-    def add_patient(self, patient: dict):
-        with self.db as db:
+    async def add_patient_db(self, patient_data: dict, username: str):
+            """
+            Adds a new patient to the database.
+
+            Args:
+                patient_data (dict): The data of the patient to be added.
+                username (str): The username of the user performing the action.
+
+            Returns:
+                int: The ID of the newly added patient.
+
+            Raises:
+                HTTPException: If there is an error adding the patient to the database.
+            """
             try:
-                new_patient = Pacient_Model(**patient)
+                validate_existence_user_with_role("patient", username, self.db)
+                new_patient = Pacient_Model(**patient_data)
                 self.db.add(new_patient)
-                self.db.commit()
-                id_patient = new_patient.id
-                return id_patient
-            except Exception as e:
-                self.db.rollback()
                 self.db.flush()
-                raise Exception(e)
-            finally:
-                self.db.close()
+                return new_patient.id
 
+            except SQLAlchemyError as e:
+                self.db.rollback
+                raise HTTPException(status_code=500, detail=str(e))
+        
+
+        
+    """Adaptar los siguientes metodos a la nueva estructura de la base de datos y los modelos"""
     def edit_patient(self, id: int, patient: Pacient):
         with self.db as db:
             result_db = self.search_patient_id(id)

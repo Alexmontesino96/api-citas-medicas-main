@@ -26,14 +26,6 @@ def search_patient_id(id: int):
         return JSONResponse(content={"message": "Patient not found"}, status_code=status_code)
 
 
-@patient_router.post("/patient/add/", tags=["patient"])
-def add_patient(patient: Pacient):
-    db = Session()
-    Patient_Services(db).add_patient(patient)
-
-    return JSONResponse(content={"message": "Add Successfully"}, status_code=201)
-
-
 @patient_router.put("/patient/edit/", tags=["patient"])
 def edit_patient(id: int, patient: Pacient):
     with Session() as db:

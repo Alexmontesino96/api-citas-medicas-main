@@ -5,13 +5,45 @@ from models.users_doctor import UserDoctor
 from database.database import Session
 
 class UserRole(Enum):
-    PACIENTE = 'paciente'
+    PACIENTE = 'patient'
     DOCTOR = 'doctor'
 
-async def search_user_with_role(role: UserRole, username: str):
-    with Session() as db:
-        model = UserPatient if role == UserRole.PACIENTE else UserDoctor
-        user = db.query(model).filter(model.username == username).first()
-        if not user:
-            raise HTTPException(status_code=404, detail="No user found with the provided username.")
-        return user
+    
+    
+
+def search_user_with_role(role: UserRole, username: str, db: Session) -> UserPatient or UserDoctor or None:
+    """
+    Search for a user with the specified role and username in the database.
+
+    Args:
+        role (UserRole): The role of the user (PACIENTE or DOCTOR).
+        username (str): The username of the user.
+        db (Session): The database session.
+
+    Returns:
+        UserPatient or UserDoctor or None: The user with the specified role and username, or None if not found.
+    """
+    model = UserPatient if role == UserRole.PACIENTE else UserDoctor
+    user = db.query(model).filter(model.username == username).first()
+    if not user:
+        return None
+    return user
+
+def validate_existence_user_with_role(role: UserRole, username: str, db: Session) -> None:
+    """
+    Validates the existence of a user with a specific role and username in the database.
+
+    Args:
+        role (UserRole): The role of the user.
+        username (str): The username of the user.
+        db (Session): The database session.
+
+    Raises:
+        HTTPException: If the user already exists.
+
+    Returns:
+        None
+    """
+    user = search_user_with_role(role, username, db)
+    if user:
+        raise HTTPException(status_code=400, detail="Username already exists")
