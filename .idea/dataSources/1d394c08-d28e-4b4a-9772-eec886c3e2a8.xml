@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="list_doctor.sqlite">
   <database-model serializer="dbm" dbms="SQLITE" family-id="SQLITE" format-version="4.49">
@@ -1772,3 +1773,5 @@
     </key>
   </database-model>
 </dataSource>
+=======
+>>>>>>> email_services

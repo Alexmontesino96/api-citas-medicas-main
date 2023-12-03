@@ -5,7 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d60f192-f8cc-4115-baa1-02d80746169c" name="Changes" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1d394c08-d28e-4b4a-9772-eec886c3e2a8.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/1d394c08-d28e-4b4a-9772-eec886c3e2a8.xml" afterDir="false" />
+>>>>>>> email_services
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
