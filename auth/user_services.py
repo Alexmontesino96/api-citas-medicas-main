@@ -10,6 +10,7 @@ from models.user_patient import UserPatient
 from auth.token_services import pwd_context
 from database.database import Session
 from common_services.micro_services import UserRole
+from email_services.email_services import send_email_confirmation_code
 
 
 
@@ -44,7 +45,7 @@ class UserServices:
                         detail="Incorrect username",
                     )
                 if TokenServices.match_password(password, user.hashed_password):
-                    access_token = TokenServices.create_access_token(username=username, role=role)
+                    send_email_confirmation_code(user.pacient_id)
                 return access_token
     
 
