@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+    /* Estilos base */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+    table {
+        border-spacing: 0;
+    }
+    td {
+        padding: 0;
+    }
+    img {
+        border: 0;
+    }
+
+    /* Diseño responsive */
+    @media screen and (max-width: 600px) {
+        .container {
+            width: 100% !important;
+        }
+        .code {
+            font-size: 40px !important; /* Tamaño grande para dispositivos móviles */
+        }
+        .footer {
+            font-size: 14px !important; /* Un poco más grande para legibilidad en móviles */
+        }
+    }
+</style>
+</head>
+<body>
+    <center>
+        <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="#f4f4f4">
+            <tr>
+                <td align="center" valign="top">
+                    <table width="600" class="container" border="0" cellpadding="0" cellspacing="0">
+                        <!-- Cabecera -->
+                        <tr bgcolor="#009688">
+                            <td align="center" valign="top" style="color: white; padding: 10px;">
+                                <h1 style="margin: 0; font-size: 24px;">Confirmación de Código de Autenticación</h1>
+                            </td>
+                        </tr>
+                        <!-- Contenido -->
+                        <tr bgcolor="#ffffff">
+                            <td align="center" valign="top" style="padding: 20px; font-size: 16px; color: #333333;">
+                                <p>Hola,</p>
+                                <p>Tu código de autenticación es:</p>
+                                <div class="code" style="font-size: 28px; font-weight: bold; margin: 20px 0;">123456</div>
+                                <p>Este código es válido por 10 minutos.</p>
+                            </td>
+                        </tr>
+                        <!-- Pie de página -->
+                        <tr>
+                            <td align="center" valign="top" class="footer" style="font-size: 12px; color: #666666; padding: 20px;">
+                                Si no solicitaste este código, por favor ignora este mensaje o contacta con soporte.
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </center>
+</body>
+</html>
