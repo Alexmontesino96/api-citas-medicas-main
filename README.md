@@ -10,9 +10,9 @@ This project is a developing integrated solution for managing medical appointmen
 - **Medical Appointment Management**: Implementation of features to create, search, update, and delete appointments with advanced validations and linkage to patients and doctors. ✔️
 - **Doctor and Patient Registration and Management**: Detailed functionality for profile registration and management, including integration between appointments, patients, and doctors. ✔️
 - **User Authentication and Authorization**: Development of specific roles and secure access controls. ✔️
+- - **Two-Factor Authentication**: Adding an extra layer of security for user access. ✔️
 
 ### Upcoming Features (In Development)
-- **Two-Factor Authentication**: Adding an extra layer of security for user access. 🕒
 - **Internal Chat System**: Enabling direct communication between patients and doctors linked by appointments. 🕒
 - **Email Appointment Reminders**: Implementing automatic notifications to improve appointment attendance rates. 🕒
 - **External NPI Validations via APIs**: Facilitating the verification of doctors' credentials. 🕒
