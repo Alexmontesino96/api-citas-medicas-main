@@ -1,0 +1,1 @@
+list_user_pending_code_confirmation = []

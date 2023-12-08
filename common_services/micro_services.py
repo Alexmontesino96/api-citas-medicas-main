@@ -8,10 +8,16 @@ class UserRole(Enum):
     PACIENTE = 'patient'
     DOCTOR = 'doctor'
 
+class Gender_User(Enum):
+    MASCULINO = 'M'
+    FEMENINO = 'F'
+    NO_BINARIO = 'X'
+    OTRO = 'O'
+
     
     
 
-def search_user_with_role(role: UserRole, username: str, db: Session) -> UserPatient or UserDoctor or None:
+def search_user_with_role(role: str, username: str, db: Session) -> UserPatient or UserDoctor or None:
     """
     Search for a user with the specified role and username in the database.
 
@@ -23,7 +29,7 @@ def search_user_with_role(role: UserRole, username: str, db: Session) -> UserPat
     Returns:
         UserPatient or UserDoctor or None: The user with the specified role and username, or None if not found.
     """
-    model = UserPatient if role == UserRole.PACIENTE else UserDoctor
+    model = UserPatient if role == UserRole.PACIENTE.value else UserDoctor
     user = db.query(model).filter(model.username == username).first()
     if not user:
         return None

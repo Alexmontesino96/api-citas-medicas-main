@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, EmailStr, validator
 from validation import validation
 from typing import Optional
+from common_services.micro_services import UserRole, Gender_User
 
 class Person(BaseModel):
     """Model representing a person in the medical appointment system.
@@ -25,40 +26,28 @@ class Person(BaseModel):
     Returns:
         Person: An instance of the Person class.
     """
-    first_name: str = Field(min_length=1, max_length=50, repr=True)
-    middle_name: str = Field(default="middle_name", max_length=50, min_length=1, validate_default=True)
-    last_name: str = Field(min_length=1, max_length=50, repr=True)
+    first_name: str = Field(example = ["Name"], min_length=1, max_length=50, repr=True)
+    middle_name: str = Field(None, max_length=50, min_length=1, validate_default=True)
+    last_name: str = Field(examples=["Your Lastname"],min_length=1, max_length=50, repr=True)
     email: EmailStr = Field(examples= ["user@gmail.com"])
-    phone_number: str = Field(default="7860000000",max_length=10, min_length=10)
+    phone_number: str = Field(examples= ["7861234567"],max_length=10, min_length=10)
     address: str = Field(examples=["123 Main St, Miami, FL 33131"])
-    birthdate: Optional[str] = Field(examples=["DD/MM/YYYY"])
-    gender: Optional[str] = Field(examples=["M,F,X,O"], repr=False)
-    role: str = Field(examples=["patient"], enum=["patient", "doctor"], repr=False)
+    birthdate: str = Field(examples=["MM/DD/YYYY"])
+    gender: Gender_User = Field(default= Gender_User.OTRO, examples=["M","F","X","O"])
+    role: UserRole = Field(examples=["patient","doctor"])
 
     def is_doctor(self):
-        return "doctor" in self.role
+        return "doctor" in self.role.value
 
     def is_patient(self):
-        return "patient" in self.role
+        return "patient" in self.role.value
 
-    @validator("role")
-    def validate_role(cls, value):
-        valid_roles = ["patient", "doctor"]
-        if value not in valid_roles:
-            raise ValueError(f"Role must be one of {valid_roles}")
-        return value
 
     @validator("birthdate")
     def validate_birthdate(cls, value):
         valid_date = validation.validation_date(value,"%m/%d/%Y")
         return valid_date
 
-    @validator("gender")
-    def validate_gender(cls, value):
-        valid_options = ["M", "F", "X", "O"]
-        if value in valid_options:
-            return value
-        raise ValueError(f"Gender must be one of {valid_options}")
 
     @validator("phone_number")
     def validate_phone_number(cls, value):

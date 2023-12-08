@@ -5,11 +5,13 @@ from datetime import datetime, timedelta
 from fastapi import HTTPException
 from fastapi import status
 import os
+from dotenv import load_dotenv
 from common_services.micro_services import UserRole
 
-
+load_dotenv()
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-SECRET_KEY = os.getenv("SECRET_KEY", "SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
+print(SECRET_KEY)
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login")
@@ -24,7 +26,8 @@ class TokenServices:
 
     @staticmethod
     def create_access_token(username: str, role: UserRole):
-        to_encode = {"sub": username, "role": role.value}
+
+        to_encode = {"sub": username, "role": role}
         expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
         to_encode.update({"exp": expire})
         encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)

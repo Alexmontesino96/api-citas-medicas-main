@@ -12,3 +12,6 @@ class UserDoctor(Base):
     hashed_password = Column(String(255), nullable=False)
     id_doctor = Column(Integer, ForeignKey('doctors.id'))
     doctor = relationship("Doctor_Model", back_populates="users_doctor")
+
+    def __str__(self):
+        return f"UserDoctor(id={self.id}, username={self.username}, hashed_password={self.hashed_password}, id_doctor={self.id_doctor})"

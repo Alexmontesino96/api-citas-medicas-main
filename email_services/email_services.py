@@ -8,16 +8,28 @@ from pydantic import EmailStr
 from fastapi import HTTPException
 from random import randint
 
-
-
+    
+    
 def send_email_confirmation_code(addressee: EmailStr):
+    """
+    Sends an email with a confirmation code to the specified addressee.
+
+    Parameters:
+    - addressee (EmailStr): The email address of the recipient.
+
+    Returns:
+    - temporary_code (int): The generated confirmation code.
+
+    Raises:
+    - HTTPException: If there is an internal server error.
+    """
     # Cargar las variables de entorno
     try:
         load_dotenv()
         remitente = os.getenv("USER_THERAPY")
         password = os.getenv("PASS")
         temporary_code = generate_confirmation_code()
-        print(f'{remitente} {password}')
+
 
         # Crea el mensaje
         msg = MIMEMultipart()
@@ -25,9 +37,9 @@ def send_email_confirmation_code(addressee: EmailStr):
         msg['From'] = remitente
         msg['To'] = addressee
 
-        with open('/Users/alexmontesino/Documents/GitHub/api-citas-medicas-main/email_services/email_confirmation_code_html.html', 'r') as html:
+        with open('/Users/alexmontesino/Documents/GitHub/api-citas-medicas-main/email_services/code_confirmation_html.html', 'r') as html:
             html = html.read()
-            # Reemplazar el marcador de posición con el código generado
+        # Reemplazar el marcador de posición con el código generado
         html = html.replace("123456", str(temporary_code))
         
         # Adjunta el mensaje al objeto MIMEMultipart
@@ -40,7 +52,7 @@ def send_email_confirmation_code(addressee: EmailStr):
         server.sendmail(remitente, addressee, msg.as_string())
         server.quit()
 
-        print(temporary_code)
+
         return temporary_code
     
     except Exception as e:

@@ -8,13 +8,14 @@ from database.database import Session
 from fastapi.encoders import jsonable_encoder
 from schemas.user import User
 from auth.user_services import UserServices
+from fastapi.security import OAuth2PasswordRequestForm
 
 
 doctor_router = APIRouter()
 
 
 @doctor_router.get("/doctor/get", tags=["doctor"])
-async def search_id_doctor(id: int, current_user: User = Depends(UserServices.get_current_user_role(["doctor","admin"]))):
+async def search_id_doctor(id: int, current_user:  OAuth2PasswordRequestForm = Depends(UserServices.get_current_user_role(["doctor","admin"]))):
     if not current_user:
         raise HTTPException(status_code=401, detail="Access denied. Authentication credentials provided are invalid or missing.")
     with Session() as db:

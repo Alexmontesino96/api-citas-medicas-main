@@ -11,8 +11,7 @@ from auth.token_services import pwd_context
 from database.database import Session
 from common_services.micro_services import UserRole
 from email_services.email_services import send_email_confirmation_code
-
-
+from auth import list_user_pending_code_confirmation
 
 
 class UserServices:
@@ -36,8 +35,9 @@ class UserServices:
             Raises:
                 HTTPException: If the username is incorrect or the password is incorrect.
             """
+            confirmation_code = None
             with Session() as db:
-                user = search_user_with_role(role, username, db)
+                user = search_user_with_role(role.value, username, db)
 
                 if not user:
                     raise HTTPException(
@@ -45,8 +45,23 @@ class UserServices:
                         detail="Incorrect username",
                     )
                 if TokenServices.match_password(password, user.hashed_password):
-                    send_email_confirmation_code(user.pacient_id)
-                return access_token
+
+                    if role.value == "doctor":
+                        email = user.doctor.email
+                        #Se envia el codigo de confirmacion al correo del doctor en este caso para pruebas un correo standard
+                        confirmation_code = send_email_confirmation_code("medicalcenterteraphy@gmail.com")
+                        list_user_pending_code_confirmation.append({"username": username, "confirmation_code": confirmation_code, "role": role.value})
+
+                    elif role.value == "patient":
+                        email = user.pacient.email
+                        #Se envia el codigo de confirmacion al correo del paciente en este caso para pruebas un correo standard
+                        confirmation_code = send_email_confirmation_code("medicalcenterteraphy@gmail.com")
+                        list_user_pending_code_confirmation.append({"username": username, "confirmation_code": confirmation_code, "role": role.value})
+
+                    return confirmation_code
+                else:
+                     return False
+                
     
 
 
