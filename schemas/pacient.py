@@ -16,7 +16,7 @@ class Pacient(Person, User):
             "phone_number": self.phone_number,
             "address": self.address,
             "birthdate": self.birthdate,
-            "gender": self.gender,
+            "gender": self.gender.value,
             "role": "patient"
         }
 

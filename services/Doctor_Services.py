@@ -2,7 +2,7 @@ from schemas.doctor import Doctor
 from models.doctor_model import Doctor_Model
 from fastapi.responses import JSONResponse
 from fastapi import HTTPException
-from validation import micro_servicios, validation
+from validation import micro_servicios
 from auth.user_services import UserServices
 from sqlalchemy.exc import SQLAlchemyError
 from common_services.micro_services import validate_existence_user_with_role

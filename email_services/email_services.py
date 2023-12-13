@@ -46,7 +46,7 @@ def send_email_confirmation_code(addressee: EmailStr):
         msg.attach(MIMEText(html, 'html'))
 
         # Crea el servidor
-        server = smtplib.SMTP('smtp.gmail.com: 587')
+        server = smtplib.SMTP('smtp.gmail.com: 587', timeout=6)
         server.starttls()
         server.login(remitente, password)
         server.sendmail(remitente, addressee, msg.as_string())
@@ -55,9 +55,12 @@ def send_email_confirmation_code(addressee: EmailStr):
 
         return temporary_code
     
+    except smtplib.SMTPConnectError:
+        raise HTTPException(status_code=500, detail="No se pudo conectar al servidor de correo electrónico")
+    except smtplib.SMTPServerDisconnected:
+        raise HTTPException(status_code=500, detail="La conexión con el servidor de correo electrónico se perdió")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Internal server error -> {e}")
-    
+        raise HTTPException(status_code=500, detail=f"Error interno del servidor -> {e}")
 
 
 def generate_confirmation_code():
