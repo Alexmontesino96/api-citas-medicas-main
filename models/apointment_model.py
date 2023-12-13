@@ -13,7 +13,7 @@ class Appointment_Model(Base):
     speciality = Column(String(50), nullable=False)
     address = Column(String(255), nullable=False)
     notes = Column(String(255), nullable=False)
-    status_appointment = Column(Boolean, default=False, nullable=True)
+    status_appointment = Column(Boolean, default=True, nullable=True)
     doctor = relationship('Doctor_Model', back_populates='appointments')
     patient = relationship('Pacient_Model', back_populates='appointments')
 

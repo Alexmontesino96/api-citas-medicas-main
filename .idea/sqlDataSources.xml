@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DdlMappings">
+    <mapping uuid="c35c5eb9-b205-4342-8658-8ae5847dd319" name="people_platzi Mapping">
+      <data-sources db="b1951b75-62f1-4954-8c1d-ff66765d94e9" />
+      <scope>
+        <node kind="database" negative="1" />
+      </scope>
+    </mapping>
+  </component>
+</project>

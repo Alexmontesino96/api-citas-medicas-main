@@ -1,26 +1,25 @@
-from pydantic import BaseModel, field_validator, EmailStr
-from typing import Optional
+from pydantic import BaseModel, Field, FutureDatetime
 from datetime import datetime
 from schemas.medical_speciality import MedicalSpeciality
-from validation import validation
+from typing import Optional
+from pydantic.types import constr
 
 
 class Appointment(BaseModel):
-    date_appointment: Optional[str]
-    speciality: Optional[str]
-    patient_id: str
-    doctor_id: str
-    address: str
+    date_appointment: FutureDatetime = Field(examples=["The format date is YYYY-MM-DD HH:MM:SS"])
+    speciality: MedicalSpeciality
+    patient_id: constr(min_length=1)
+    doctor_id: constr(min_length=1)
+    address: constr(min_length=1)
     notes: Optional[str]
-
-    @field_validator("date_appointment")
-    def validate_appointment(cls, value):
-        return validation.validation_date(value)
-
-    @field_validator("speciality")
-    def validate_speciality(cls, value):
-        if value not in [e.value for e in MedicalSpeciality]:
-            raise ValueError(
-                f"Speciality not found. Valid specialties are: {', '.join([e.value for e in MedicalSpeciality])}")
-        return value
+    
+    def model_dump(self):
+        return {
+            "date_appointment": self.date_appointment,
+            "speciality": self.speciality.value,
+            "patient_id": self.patient_id,
+            "doctor_id": self.doctor_id,
+            "address": self.address,
+            "notes": self.notes
+        }
 
